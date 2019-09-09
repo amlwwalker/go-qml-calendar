@@ -4,7 +4,8 @@ import (
 	"os"
 	"sync"
 
-	_ "github.com/amlwwalker/example-qml/calendarView/events"
+	_ "github.com/amlwwalker/go-qml-calendar/events"
+
 	"github.com/therecipe/qt/core"
 	"github.com/therecipe/qt/qml"
 	"github.com/therecipe/qt/widgets"
@@ -26,12 +27,11 @@ func Instance() *Controller {
 }
 
 func main() {
+	core.QCoreApplication_SetAttribute(core.Qt__AA_EnableHighDpiScaling, true)
 
 	qApp := widgets.NewQApplication(len(os.Args), os.Args)
 	Instance()
 	Instance().qApp = qApp
-
-	core.QCoreApplication_SetAttribute(core.Qt__AA_EnableHighDpiScaling, true)
 
 	app := qml.NewQQmlApplicationEngine(nil)
 	app.AddImportPath("./events/qml")

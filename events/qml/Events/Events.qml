@@ -12,4 +12,6 @@ EventController {
       selectedDate: new Date(2014, 0, 1)
       focus: true
   }
+
+  property alias selectedDate: calendar.selectedDate
 }

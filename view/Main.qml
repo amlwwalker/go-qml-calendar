@@ -39,6 +39,7 @@ ApplicationWindow {
                     id: eventDayLabel
                     text: calendar.selectedDate.getDate()
                     font.pointSize: 35
+                    color: "#aaa"
                 }
 
                 Column {
@@ -48,11 +49,13 @@ ApplicationWindow {
                         readonly property var options: { weekday: "long" }
                         text: Qt.locale().standaloneDayName(calendar.selectedDate.getDay(), Locale.LongFormat)
                         font.pointSize: 18
+                        color: "#aaa"
                     }
                     Label {
                         text: Qt.locale().standaloneMonthName(calendar.selectedDate.getMonth())
                               + calendar.selectedDate.toLocaleDateString(Qt.locale(), " yyyy")
                         font.pointSize: 12
+                        color: "#aaa"
                     }
                 }
             }
@@ -70,7 +73,7 @@ ApplicationWindow {
                 header: eventListHeader
                 anchors.fill: parent
                 anchors.margins: 10
-                model: eventModel.eventsForDate(calendar.selectedDate)
+                model: calendar.eventsForDate(calendar.selectedDate);
 
                 delegate: Rectangle {
                     width: eventsListView.width
@@ -103,6 +106,7 @@ ApplicationWindow {
                             width: parent.width
                             wrapMode: Text.Wrap
                             text: modelData.name
+                            color: "#aaa"
                         }
                         Label {
                             id: timeLabel
