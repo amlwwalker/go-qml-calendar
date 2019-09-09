@@ -34,6 +34,9 @@ func (e *eventController) init() {
 }
 
 func (m *eventController) eventsForDate(d *core.QDate) (o []*someEvent) {
+	if !(d.Year() == 2014 && d.Month() == 1 && d.Day() == 3) {
+		return
+	}
 
 	for i := 0; i < d.Day(); i++ {
 		e := NewSomeEvent(nil)
