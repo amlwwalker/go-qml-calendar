@@ -12,6 +12,10 @@ EventController {
       selectedDate: new Date(2014, 0, 1)
       focus: true
   }
-
-  property alias selectedDate: calendar.selectedDate
+  visible: {
+    console.log(calendar.selectedDate)
+    console.log(eventsForDate(calendar.selectedDate).length)
+    return true
+  }
+  selectedDate: calendar.selectedDate
 }

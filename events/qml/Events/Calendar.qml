@@ -76,7 +76,10 @@ Old.Calendar {
       Rectangle {
           anchors.fill: parent
           border.color: "transparent"
-          color: styleData.date !== undefined && styleData.selected ? selectedDateColor : "transparent"
+          color: {
+              console.log("styleData.selected ", styleData.selected)
+              return styleData.date !== undefined && styleData.selected ? selectedDateColor : "transparent"
+            }
           anchors.margins: styleData.selected ? -1 : 0
       }
 
@@ -87,7 +90,7 @@ Old.Calendar {
           anchors.margins: -1
           width: 12
           height: width
-          source: "qrc:/images/eventindicator.png"
+          source: "./assets/eventindicator.png"
       }
 
       Label {

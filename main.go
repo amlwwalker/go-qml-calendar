@@ -4,7 +4,7 @@ import (
 	"os"
 	"sync"
 
-	_ "github.com/amlwwalker/go-qml-calendar/events"
+	_ "github.com/amlwwalker/example-qml/calendarView/events"
 
 	"github.com/therecipe/qt/core"
 	"github.com/therecipe/qt/qml"

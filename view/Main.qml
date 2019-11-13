@@ -73,7 +73,7 @@ ApplicationWindow {
                 header: eventListHeader
                 anchors.fill: parent
                 anchors.margins: 10
-                model: calendar.eventsForDate(calendar.selectedDate);
+                model: calendar.listModel
 
                 delegate: Rectangle {
                     width: eventsListView.width
@@ -105,14 +105,21 @@ ApplicationWindow {
                             id: nameLabel
                             width: parent.width
                             wrapMode: Text.Wrap
-                            text: modelData.name
+                            text: display.name
+                            color: "#aaa"
+                        }
+                        Label {
+                            id: descriptionLabel
+                            width: parent.width
+                            wrapMode: Text.Wrap
+                            text: display.description
                             color: "#aaa"
                         }
                         Label {
                             id: timeLabel
                             width: parent.width
                             wrapMode: Text.Wrap
-                            text: modelData.startDate.toLocaleTimeString(calendar.locale, Locale.ShortFormat)
+                            text: display.startDate.toLocaleTimeString(calendar.locale, Locale.ShortFormat)
                             color: "#aaa"
                         }
                     }
