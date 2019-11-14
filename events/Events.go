@@ -66,10 +66,7 @@ func (e *eventController) eventsForDate(d *core.QDate) (o []*someEvent) {
 func (e *eventController) init() {
 	fmt.Println("event model initd")
 	eModel := NewEventModel(nil) //configure the event model
-	// eModel.InitWith(c.manager)
 	e.SetEventModel(eModel)
-
-	// e.SetListModel(core.NewQAbstractListModel(nil))
 
 	eModel.ConnectRowCount(func(*core.QModelIndex) int {
 		if e.SelectedDate() == nil {
@@ -87,7 +84,6 @@ func (e *eventController) init() {
 
 	eModel.ConnectSelectedDateChanged(func(date *core.QDate) {
 		fmt.Println("hahahahah selected date changed", date.Year(), date.Month(), date.Day())
-		// eModel.SetSelectedDate(date)
 		fmt.Println("eModel selected date set to", eModel.SelectedDate().Year(), eModel.SelectedDate().Month(), eModel.SelectedDate().Day())
 		eModel.BeginResetModel()
 		eModel.EndResetModel()
@@ -102,7 +98,6 @@ func (e *eventController) init() {
 		eModel.SetSelectedDate(date)
 		fmt.Println("eController selected date set to", e.SelectedDate().Year(), e.SelectedDate().Month(), e.SelectedDate().Day())
 		fmt.Println("eModel selected date set to", eModel.SelectedDate().Year(), eModel.SelectedDate().Month(), eModel.SelectedDate().Day())
-		// eModel.SelectedDateChanged(date)
 		eModel.BeginResetModel()
 		eModel.EndResetModel()
 		e.CalendarUpdate()
@@ -124,22 +119,6 @@ func (e *eventController) init() {
 
 		e.events = append(e.events, ev)
 	}
-	// for i := 0; i < 1; i++ {
-	// 	ev := NewSomeEvent(nil)
-	// 	ev.SetName(fmt.Sprintf("event (%v) on the %v.%v.%v", i+1, 2014, 1, i+1))
-	// 	ev.SetDescription(fmt.Sprintf("started adding properties for day (%+v)", i+1))
-	// 	st := core.NewQDateTime()
-	// 	st.SetDate(core.NewQDate3(2014, 2, 5))
-	// 	st.SetTime(core.NewQTime3(time.Now().Hour(), time.Now().Minute(), 0, 0))
-	// 	ev.SetStartDate(st)
-
-	// 	et := core.NewQDateTime()
-	// 	et.SetDate(core.NewQDate3(2014, 2, 5))
-	// 	et.SetTime(core.NewQTime3(time.Now().Hour(), time.Now().Minute(), 0, 0))
-	// 	ev.SetEndDate(et)
-
-	// 	e.events = append(e.events, ev)
-	// }
 
 	go func() {
 		time.Sleep(3 * time.Second)

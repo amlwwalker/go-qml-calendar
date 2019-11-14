@@ -47,13 +47,13 @@ ApplicationWindow {
 
                     Label {
                         readonly property var options: { weekday: "long" }
-                        text: Qt.locale().standaloneDayName(calendar.selectedDate.getDay(), Locale.LongFormat)
+                        text: Qt.locale().standaloneDayName(calendar.eventModel.selectedDate.getDay(), Locale.LongFormat)
                         font.pointSize: 18
                         color: "#aaa"
                     }
                     Label {
-                        text: Qt.locale().standaloneMonthName(calendar.selectedDate.getMonth())
-                              + calendar.selectedDate.toLocaleDateString(Qt.locale(), " yyyy")
+                        text: Qt.locale().standaloneMonthName(calendar.eventModel.selectedDate.getMonth())
+                              + calendar.eventModel.selectedDate.toLocaleDateString(Qt.locale(), " yyyy")
                         font.pointSize: 12
                         color: "#aaa"
                     }

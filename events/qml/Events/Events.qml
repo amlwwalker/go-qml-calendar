@@ -12,10 +12,6 @@ EventController {
       selectedDate: new Date(2014, 0, 1)
       focus: true
   }
-  visible: {
-    console.log(calendar.selectedDate)
-    console.log(eventsForDate(calendar.selectedDate).length)
-    return true
-  }
+  visible: true
   selectedDate: calendar.selectedDate
 }
