@@ -37,7 +37,7 @@ ApplicationWindow {
 
                 Label {
                     id: eventDayLabel
-                    text: calendar.selectedDate.getDate()
+                    text: calendar.eventModel.selectedDate.getDate()
                     font.pointSize: 35
                     color: "#aaa"
                 }
@@ -73,7 +73,7 @@ ApplicationWindow {
                 header: eventListHeader
                 anchors.fill: parent
                 anchors.margins: 10
-                model: calendar.listModel
+                model: calendar.eventModel
 
                 delegate: Rectangle {
                     width: eventsListView.width

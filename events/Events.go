@@ -40,7 +40,6 @@ func (e *eventModel) update() {
 	e.EndResetModel()
 }
 
-
 //naming it "event" won't work at the moment for some reason
 type someEvent struct {
 	core.QObject
@@ -49,6 +48,19 @@ type someEvent struct {
 	_ string          `property:"description"`
 	_ *core.QDateTime `property:"startDate"`
 	_ *core.QDateTime `property:"endDate"`
+}
+
+func (e *eventController) eventsForDate(d *core.QDate) (o []*someEvent) {
+	fmt.Println("requested date ", d.Year(), d.Month(), d.Day())
+	for _, diff := range e.events { //it all rides on where events comes from as to who owns this function, which is fine
+		startDate := diff.StartDate().Date()
+		//e is a QDateTime, need to get the Date() object to get the Year/Month/Day
+		if startDate.Year() == d.Year() && int(startDate.Month()) == d.Month() && startDate.Day() == d.Day() {
+			fmt.Println("event handler adding ", startDate.Year(), startDate.Month(), startDate.Day())
+			o = append(o, diff)
+		}
+	}
+	return
 }
 
 func (e *eventController) init() {
@@ -63,24 +75,38 @@ func (e *eventController) init() {
 		if e.SelectedDate() == nil {
 			return 0
 		}
-		return len(e.eventsForDate(e.SelectedDate()))
+		return len(e.eventsForDate(eModel.SelectedDate()))
 	})
 
 	eModel.ConnectData(func(index *core.QModelIndex, role int) *core.QVariant {
 		if eModel.SelectedDate() == nil || role != int(core.Qt__DisplayRole) {
 			return core.NewQVariant()
 		}
-		return eModel.eventsForDate(eModel.SelectedDate())[index.Row()].ToVariant()
+		return e.eventsForDate(e.SelectedDate())[index.Row()].ToVariant()
 	})
 
-	eModel.ConnectSelectedDateChanged(func(*core.QDate) {
-		fmt.Println("selectd date changd")
+	eModel.ConnectSelectedDateChanged(func(date *core.QDate) {
+		fmt.Println("hahahahah selected date changed", date.Year(), date.Month(), date.Day())
+		// eModel.SetSelectedDate(date)
+		fmt.Println("eModel selected date set to", eModel.SelectedDate().Year(), eModel.SelectedDate().Month(), eModel.SelectedDate().Day())
 		eModel.BeginResetModel()
 		eModel.EndResetModel()
 	})
 
 	eModel.ConnectUpdate(eModel.update)
 	e.ConnectCalendarUpdate(eModel.Update)
+	e.ConnectSelectedDate(eModel.SelectedDate)
+	e.ConnectSelectedDateChanged(func(date *core.QDate) {
+		fmt.Println("controller date changed to ", date.Year(), date.Month(), date.Day())
+		e.SetSelectedDate(date)
+		eModel.SetSelectedDate(date)
+		fmt.Println("eController selected date set to", e.SelectedDate().Year(), e.SelectedDate().Month(), e.SelectedDate().Day())
+		fmt.Println("eModel selected date set to", eModel.SelectedDate().Year(), eModel.SelectedDate().Month(), eModel.SelectedDate().Day())
+		// eModel.SelectedDateChanged(date)
+		eModel.BeginResetModel()
+		eModel.EndResetModel()
+		e.CalendarUpdate()
+	})
 
 	for i := 0; i < 3; i++ {
 		ev := NewSomeEvent(nil)
