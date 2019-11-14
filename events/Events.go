@@ -13,6 +13,8 @@ func init() {
 	fmt.Println("eventController initd")
 }
 
+var EventModel *eventModel
+
 type eventController struct {
 	quick.QQuickItem
 	_ func() `constructor:"init"`
@@ -20,10 +22,24 @@ type eventController struct {
 	events []*someEvent
 	_      func(*core.QDate) []*someEvent `slot:"eventsForDate,auto"`
 
-	_ *core.QAbstractListModel `property:"listModel"`
+	_ *core.QAbstractListModel `property:"eventModel"`
 	_ *core.QDate              `property:"selectedDate"`
-	_ func()                   `signal:"update"`
+	_ func()                   `signal:"calendarUpdate"`
 }
+
+type eventModel struct {
+	core.QAbstractListModel
+	_ *core.QDate `property:"selectedDate"`
+	_ string      `property:"filterExpression"`
+	_ func()      `signal:"update"`
+}
+
+func (e *eventModel) update() {
+	fmt.Println("event controller update")
+	e.BeginResetModel()
+	e.EndResetModel()
+}
+
 
 //naming it "event" won't work at the moment for some reason
 type someEvent struct {
@@ -37,28 +53,34 @@ type someEvent struct {
 
 func (e *eventController) init() {
 	fmt.Println("event model initd")
-	e.SetListModel(core.NewQAbstractListModel(nil))
+	eModel := NewEventModel(nil) //configure the event model
+	// eModel.InitWith(c.manager)
+	e.SetEventModel(eModel)
 
-	e.ListModel().ConnectRowCount(func(*core.QModelIndex) int {
+	// e.SetListModel(core.NewQAbstractListModel(nil))
+
+	eModel.ConnectRowCount(func(*core.QModelIndex) int {
 		if e.SelectedDate() == nil {
 			return 0
 		}
 		return len(e.eventsForDate(e.SelectedDate()))
 	})
 
-	e.ListModel().ConnectData(func(index *core.QModelIndex, role int) *core.QVariant {
-		if e.SelectedDate() == nil || role != int(core.Qt__DisplayRole) {
+	eModel.ConnectData(func(index *core.QModelIndex, role int) *core.QVariant {
+		if eModel.SelectedDate() == nil || role != int(core.Qt__DisplayRole) {
 			return core.NewQVariant()
 		}
-		return e.eventsForDate(e.SelectedDate())[index.Row()].ToVariant()
+		return eModel.eventsForDate(eModel.SelectedDate())[index.Row()].ToVariant()
 	})
 
-	e.ConnectSelectedDateChanged(func(*core.QDate) {
-		e.ListModel().BeginResetModel()
-		e.ListModel().EndResetModel()
+	eModel.ConnectSelectedDateChanged(func(*core.QDate) {
+		fmt.Println("selectd date changd")
+		eModel.BeginResetModel()
+		eModel.EndResetModel()
 	})
 
-	e.ConnectUpdate(e.update)
+	eModel.ConnectUpdate(eModel.update)
+	e.ConnectCalendarUpdate(eModel.Update)
 
 	for i := 0; i < 3; i++ {
 		ev := NewSomeEvent(nil)
@@ -112,22 +134,4 @@ func (e *eventController) init() {
 		e.Update()
 		fmt.Println("updating")
 	}()
-}
-
-func (e *eventController) update() {
-	e.ListModel().BeginResetModel()
-	e.ListModel().EndResetModel()
-}
-
-func (e *eventController) eventsForDate(d *core.QDate) (o []*someEvent) {
-
-	for _, diff := range e.events {
-		startDate := diff.StartDate().Date()
-		//e is a QDateTime, need to get the Date() object to get the Year/Month/Day
-		if startDate.Year() == d.Year() && int(startDate.Month()) == d.Month() && startDate.Day() == d.Day() {
-			fmt.Println("event handler adding ", startDate.Year())
-			o = append(o, diff)
-		}
-	}
-	return
 }

@@ -77,7 +77,7 @@ Old.Calendar {
           anchors.fill: parent
           border.color: "transparent"
           color: {
-              console.log("styleData.selected ", styleData.selected)
+            //   console.log("styleData.selected ", styleData.selected)
               return styleData.date !== undefined && styleData.selected ? selectedDateColor : "transparent"
             }
           anchors.margins: styleData.selected ? -1 : 0
